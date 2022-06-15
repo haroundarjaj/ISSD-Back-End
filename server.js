@@ -39,7 +39,7 @@ conexion.connect(function(err) {
 //where EDO_NORMALIZACION="x"
 app.get('/api/consulta',function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
-	conexion.query('select * from direccion limit 30', (error,filas)=>{
+	conexion.query('select * from direccion where EDO_NORMALIZACION="x"', (error,filas)=>{
 		if(error){
 			console.log(error)
 			throw error;
@@ -93,9 +93,10 @@ app.post('/api/actualiza/:id', (req,res)=>{
 	let codigo_postal= JSON.stringify(req.query.codigo_postal);
 	let codigo= JSON.stringify(req.query.codigo);
 	let tcalle = JSON.stringify(req.query.tcalle);
+	
 	console.log(ciudad)
 	
-	let sql = 'update direccion set EDO_NORMALIZACION="N", CODIGO_CORRECCION='+codigo+', SUBTITULO_salida='++', ESTADO_salida='+estado+', CIUDAD_salida='+ciudad+', COLONIA_salida='+colonia+', CALLE_salida='+calle+', NUMERO_salida='+numero+', COORD_LONGITUD_SALIDA='+lat+',COORD_LATITUD_SALIDA='+lng+' where ID_DOMICILIO_RNUM=?'
+	let sql = 'update direccion set EDO_NORMALIZACION="N", CODIGO_CORRECCION='+codigo+', SUBTITULO_salida='+tcalle+', ESTADO_salida='+estado+', CIUDAD_salida='+ciudad+', COLONIA_salida='+colonia+', CALLE_salida='+calle+', NUMERO_salida='+numero+', COORD_LONGITUD_SALIDA='+lat+',COORD_LATITUD_SALIDA='+lng+' where ID_DOMICILIO_RNUM=?'
 	console.log("se createConnection")
 	conexion.query(sql,[id], function(error,results){
 		if(error){
