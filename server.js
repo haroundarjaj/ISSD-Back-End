@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+var fs=require('fs');
+var results
 var mysql = require('mysql');
 var corsOptions = {
     origin: "http://localhost:3000"
@@ -36,13 +38,23 @@ conexion.connect(function(err) {
     }
     console.log('Conectado con el identificador ' + conexion.threadId);
 });
+
+app.get('/xml', function(req, res){
+    result=fs.readFileSync('configuracion.xml');
+    res.end(result);
+});
+
+app.get('/xmlapi', function(req, res){
+    result=fs.readFileSync('normalizador_config.xml');
+    res.end(result);
+});
+
 //where EDO_NORMALIZACION="x"
 app.get('/api/consulta',function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	conexion.query('select * from direccion where EDO_NORMALIZACION="x"', (error,filas)=>{
 		if(error){
 			console.log(error)
-			throw error;
 		}
 		else {
 			res.send(filas)
@@ -55,7 +67,6 @@ app.get('/api/consulta/:id',function(req,res){
 	conexion.query('select * from direccion where ID_DOMICILIO_RNUM = ?',[req.params.id], function(error,fila){
 		if(error){
 			console.log(error)
-			throw error;
 		}
 		else {
 			res.send(fila)
@@ -70,7 +81,6 @@ app.put('/api/indetermina/:id',function(req,res){
 	conexion.query(sql,[id], function(error,results){
 		if(error){
 			console.log(error)
-			throw error;
 		}
 		else {
 			res.send(results)
@@ -93,15 +103,14 @@ app.post('/api/actualiza/:id', (req,res)=>{
 	let codigo_postal= JSON.stringify(req.query.codigo_postal);
 	let codigo= JSON.stringify(req.query.codigo);
 	let tcalle = JSON.stringify(req.query.tcalle);
+	let tipo = JSON.stringify(req.query.tipo);
+	let fecha = JSON.stringify(req.query.fecha);
 	
-	console.log(ciudad)
-	
-	let sql = 'update direccion set EDO_NORMALIZACION="N", CODIGO_CORRECCION='+codigo+', SUBTITULO_salida='+tcalle+', ESTADO_salida='+estado+', CIUDAD_salida='+ciudad+', COLONIA_salida='+colonia+', CALLE_salida='+calle+', NUMERO_salida='+numero+', COORD_LONGITUD_SALIDA='+lat+',COORD_LATITUD_SALIDA='+lng+' where ID_DOMICILIO_RNUM=?'
+	let sql = 'update direccion set EDO_NORMALIZACION="N", FECHA_ACTUALIZACION='+fecha+',METODO_NORMALIZACION='+tipo+', CODIGO_CORRECCION='+codigo+', SUBTITULO_salida='+tcalle+', CODIGO_POSTAL_salida='+codigo_postal+',ESTADO_salida='+estado+', CIUDAD_salida='+ciudad+', COLONIA_salida='+colonia+', CALLE_salida='+calle+', NUMERO_salida='+numero+', COORD_LONGITUD_SALIDA='+lat+',COORD_LATITUD_SALIDA='+lng+' where ID_DOMICILIO_RNUM=?'
 	console.log("se createConnection")
 	conexion.query(sql,[id], function(error,results){
 		if(error){
 			console.log(error)
-			throw error;
 		}
 		else {
 			res.send(results)
