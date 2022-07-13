@@ -4,9 +4,13 @@ const app = express();
 var fs=require('fs');
 var results
 var mysql = require('mysql');
+
+//const addressesController = require("./controllers/address.controller.js");
 var corsOptions = {
-    origin: "http://localhost:3000"
+    origin: "*"
 };
+
+
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -23,7 +27,8 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
 
-var conexion= mysql.createConnection({
+
+/*var conexion= mysql.createConnection({
     host : '192.168.50.91',
     user : 'root2',
     password : 'admin',
@@ -116,4 +121,4 @@ app.post('/api/actualiza/:id', (req,res)=>{
 			res.send(results)
 		}
 	})
-});
+});*/
