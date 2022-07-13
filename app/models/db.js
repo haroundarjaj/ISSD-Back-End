@@ -19,9 +19,15 @@ pool.getConnection((err, connection) => {
         if (err.code === 'ECONNREFUSED') {
             console.error('Database connection was refused.')
         }
+		if (err.code === 'ETIMEDOUT') {
+            console.error('Unable to connect to database.')
+        }
+		else{
+			console.error(err)
+		}
     }
-    if (connection) connection.release()
-    console.log("Successfully connected to the database.");
+    else
+    console.log("Successfully connected to the database!!!.");
     return
 })
 module.exports = pool
